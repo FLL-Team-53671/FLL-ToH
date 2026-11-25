@@ -41,3 +41,19 @@ python3 -m http.server 8765
 
 Then open http://localhost:8765. I also added a small preview config in `.claude/launch.json` so the page opens in the app's browser pane.
 
+User
+
+If I double-click it says Access blocked
+
+AI
+
+OpenStreetMap's tile servers refuse pages opened directly from a file, so the map shows "Access blocked." I'm switching to CARTO's street tiles, which allow it.
+
+CARTO now requires an API key, so that won't work either. The iNaturalist data loads fine from the file, so only the map tiles are the problem. Trying Esri's street map, which has no key requirement.
+
+Double-clicking [index.html](index.html) works now. The "Access blocked" message came from the map provider: OpenStreetMap blocks map images for pages opened directly from a file. I first tried CARTO's maps, but they now need an account key. The page now uses Esri's street map ([index.html:255](index.html:255)), which doesn't.
+
+I opened the file directly in Chrome to check, and the street map and all 633 sightings loaded.
+
+Statuses you save on the double-clicked file are stored separately from ones saved through the `localhost:8765` server. To move them over, use **Export statuses** in one and **Import statuses** in the other.
+
