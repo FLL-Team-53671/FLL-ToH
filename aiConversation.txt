@@ -1,0 +1,43 @@
+User
+
+https://www.inaturalist.org/observations?place_id=124749&subview=map&taxon_id=57278
+
+I want to make a webpage that takes data from the site above for tree of heaven locations in this area, but lets me see what status the tree is in.For example: whether the tree is alive and healthy, dead, has been treated, has been verified that the tree is there, reported but not verified. The treatment is fungus called Verticillium nonalfalfae which is meant to kill the tree of heaven. The users should be people who want to control tree of heaven and can safely administer the treatment, such as the usda forest service.
+
+AI
+
+The iNaturalist data has 633 tree-of-heaven sightings in Pittsburgh. Where should the page live? A claude.ai artifact can save tree statuses for everyone and limit who may change them, but it can't load live iNaturalist data or street map tiles. It would use a saved copy of the sightings and a simple map of rivers and roads. A standalone HTML file in your ToH folder gets live iNaturalist data and a real street map, but statuses save only in each person's own browser unless someone adds a server later.
+
+User
+
+Standalone HTML file
+
+AI
+
+Testing the page on a local server now; checking why it's blank.
+
+Works. One bug: dates use UTC, so evening entries show tomorrow's date. Fixing that.
+
+I built the tracker page in one file, [index.html](index.html). It pulls all 633 tree-of-heaven sightings in Pittsburgh live from iNaturalist and puts them on a street map. Each dot is colored by the tree's status.
+
+I tested it on a local server. All 633 sightings loaded, and saving a "Treated" update changed the counts at the top. I also fixed a bug where updates saved in the evening got the next day's date. I deleted my test entry afterward.
+
+**How it works:**
+- **Statuses:** every sighting starts as **Reported – not verified**. A crew can change it to **Verified – alive & healthy**, **Treated** (with *Verticillium nonalfalfae*), **Dead**, or **Not found**. I added "Not found" for when a crew visits and the tree isn't there.
+- **Updating a tree:** click a dot or a list row. The crew enters their name, the visit date and notes. For a treatment they can also record trunk diameter and the number of inoculation points. Each tree keeps a full history of these updates.
+- **Follow-up reminders:** treated trees that aren't marked dead after 60 days get a "Follow-up" flag so a crew goes back to check for wilt. I picked 60 days as a placeholder; you can change it at the top of the script (`FOLLOW_UP_DAYS`).
+- **Tools:** you can filter by status with the chips at the top, search by street, sort by follow-up due, and get directions to each tree. The page warns when an observer hid a sighting's exact location.
+- **Safety note:** the About box says only trained, authorized crews, like the USDA Forest Service, should apply the fungus.
+
+**Limits:**
+- **Statuses aren't shared.** They save only in the browser where they were entered. Teammates share them with **Export statuses** and **Import statuses**, and an import keeps the newest change for each tree.
+- **Anyone can edit.** The page has no logins, so it can't stop someone from changing a status. Shared statuses and real access control would need a small server or database later.
+
+**To run it:** double-clicking the file should work, but I only tested it through a local server. That's the safer way if it doesn't load. From the ToH folder:
+
+```bash
+python3 -m http.server 8765
+```
+
+Then open http://localhost:8765. I also added a small preview config in `.claude/launch.json` so the page opens in the app's browser pane.
+
